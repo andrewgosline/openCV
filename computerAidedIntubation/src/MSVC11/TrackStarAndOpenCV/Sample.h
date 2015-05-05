@@ -1,6 +1,6 @@
-#define USE_SENSOR
+//#define USE_SENSOR
 #define INCH_TO_CM 2.54
-#define CAMERA_IDX 1  //On the Acer computer, the USB image capture is on 1, webcame on 0.
+#define CAMERA_IDX 0  //On the Acer computer, the USB image capture is on 1, webcame on 0.
 
 #define ENDOSCOPE_OFFSET_X 0 // -1.0  //offset to X in inches
 #define ENDOSCOPE_OFFSET_Y 0 //-1.5  //offset to Y in inches

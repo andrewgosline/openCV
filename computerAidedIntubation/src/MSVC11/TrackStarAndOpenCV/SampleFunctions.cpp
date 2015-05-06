@@ -33,6 +33,8 @@ void errorHandler(int error)
 	exit(0);
 }
 
+
+
  mat populateTransMat(DOUBLE_POSITION_MATRIX_RECORD inputRecord)
  {
 	mat x(4,4);
@@ -172,7 +174,7 @@ void errorHandler(int error)
 
 void headsUpDisplayOverlay(IplImage * frm, int imageLocat, mat hUpLoc, int centerX, int centerY, int radiusIn, int radiusOut)
 {
-	int      lineWidth= 1;
+	int      lineWidth= 2;
 	int		 lineType = 8;
 	int		multX = 1;
 	int		multY = 1;
@@ -230,7 +232,7 @@ void headsUpDisplayOverlay(IplImage * frm, int imageLocat, mat hUpLoc, int cente
 
 	}
 	if ( imageLocat == STRAIGHT_IDX ) 
-		cvCircle( frm, cvPoint(centerX,centerY),radiusIn, cvScalar( 0, 0, 255 ), lineWidth, lineType );
+		cvCircle( frm, cvPoint(centerX,centerY),radiusIn-3, cvScalar( 0, 255, 0 ), lineWidth, lineType ); // quick hack to remove 5 pix
 
 
 	if ( (imageLocat == DOWN_IDX ) | ( imageLocat == RIGHT_IDX ) | ( imageLocat == LEFT_IDX ) | ( imageLocat == UP_IDX ) |

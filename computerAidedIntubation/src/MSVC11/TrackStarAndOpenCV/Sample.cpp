@@ -182,12 +182,14 @@ int main() {
 
 		if (toggleGuidanceState == 1) {
 		// put the overlay on the location of the screen corresponding to the robotics.
-			headsUpDisplayOverlay(frame, imageLocation, headsUpLocations, IMAGE_CENTER_X, IMAGE_CENTER_Y, 
-								ENDOSCOPE_IMAGE_RADIUS /2 ,ENDOSCOPE_IMAGE_RADIUS );
-			
-			//for (i = 1; i< 13 ; i++){
-		//		headsUpDisplayOverlay(frame, i, headsUpLocations, IMAGE_CENTER_X, IMAGE_CENTER_Y, 
-	//							ENDOSCOPE_IMAGE_RADIUS /2 ,ENDOSCOPE_IMAGE_RADIUS ); }
+		//	headsUpDisplayOverlay(frame, imageLocation, headsUpLocations, IMAGE_CENTER_X, IMAGE_CENTER_Y, 
+		//						ENDOSCOPE_IMAGE_RADIUS /2 ,ENDOSCOPE_IMAGE_RADIUS );
+		
+
+		// Here is where you test all the possible display locations
+		for (i = 0; i< 13 ; i++){
+				headsUpDisplayOverlay(frame, i, headsUpLocations, IMAGE_CENTER_X, IMAGE_CENTER_Y, 
+								ENDOSCOPE_IMAGE_RADIUS /2 ,ENDOSCOPE_IMAGE_RADIUS ); }
 
 
 		}

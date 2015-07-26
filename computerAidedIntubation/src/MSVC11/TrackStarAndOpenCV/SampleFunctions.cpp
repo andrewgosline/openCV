@@ -4,6 +4,7 @@
 #include <iostream>
 #include <armadillo>
 #include <math.h>
+#include <stdio.h>
 using namespace arma;
 //////////////////////////////////////////////////////////////////////////////
 //	ERROR HANDLER
@@ -15,6 +16,8 @@ using namespace arma;
 // like the console
 // Specific error codes should be parsed depending on the application.
 //////////////////////////////////////////////////////////////////////////////
+
+
 void errorHandler(int error)
 {
 	char			buffer[1024];
@@ -33,6 +36,26 @@ void errorHandler(int error)
 	exit(0);
 }
 
+void drawArrow(IplImage *image, CvPoint p, CvPoint q, CvScalar color, int arrowMagnitude = 9, int thickness=1, int line_type=8, int shift=0) 
+{
+	double angle = 0;
+	double pi = 3.1415;
+
+    //Draw the principle line
+    cvLine(image, p, q, color, thickness, line_type, shift);
+    //compute the angle alpha
+    angle = atan2((double)p.y-q.y, (double)p.x-q.x);
+    //compute the coordinates of the first segment
+	p.x = (int) ( q.x +  arrowMagnitude * cos(angle + pi/4));
+    p.y = (int) ( q.y +  arrowMagnitude * sin(angle + pi/4));
+    //Draw the first segment
+    cvLine(image, p, q, color, thickness, line_type, shift);
+    //compute the coordinates of the second segment
+	p.x = (int) ( q.x +  arrowMagnitude * cos(angle - pi/4));
+	p.y = (int) ( q.y +  arrowMagnitude * sin(angle - pi/4));
+    //Draw the second segment
+    cvLine(image, p, q, color, thickness, line_type, shift);
+}  
 
 
  mat populateTransMat(DOUBLE_POSITION_MATRIX_RECORD inputRecord)
@@ -193,8 +216,9 @@ void headsUpDisplayOverlay(IplImage * frm, int imageLocat, mat hUpLoc, int cente
 			int      nCurves=2;
 			int      isCurveClosed=0;
 			cvPolyLine(frm,curveArr,nCurvePts,nCurves,isCurveClosed,cvScalar(0,0,255),lineWidth);  //draw the line
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, 45,135, cvScalar(0,0,255),lineWidth,lineType ); // inner ellispe
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, 45,135, cvScalar(0,0,255),lineWidth,lineType ); // outer ellipse
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, 45,135, cvScalar(0,255,255),lineWidth,lineType ); // inner ellispe
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, 45,135, cvScalar(0,255,255),lineWidth,lineType ); // outer ellipse
+			drawArrow(frm,  cvPoint(centerX , centerY + 150), cvPoint(centerX , centerY  + 180 ), cvScalar(0,255,255), 9, 2, 8, 0);
 		}
 		if (imageLocat == STRAIGHT_UP_IDX){
 			CvPoint  curve1[]={centerX+ 0.707*radiusIn, centerY - 0.707*radiusIn , centerX+ 0.707*radiusOut, centerY - 0.707*radiusOut}; 
@@ -203,9 +227,10 @@ void headsUpDisplayOverlay(IplImage * frm, int imageLocat, mat hUpLoc, int cente
 			int      nCurvePts[2]={2,2};
 			int      nCurves=2;
 			int      isCurveClosed=0;
-			cvPolyLine(frm,curveArr,nCurvePts,nCurves,isCurveClosed,cvScalar(0,0,255),lineWidth);  //draw the line
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, 225,315, cvScalar(0,0,255),lineWidth,lineType ); // inner ellispe
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, 225,315, cvScalar(0,0,255),lineWidth,lineType ); // outer ellipse
+			cvPolyLine(frm,curveArr,nCurvePts,nCurves,isCurveClosed,cvScalar(0,255,255),lineWidth);  //draw the line
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, 225,315, cvScalar(0,255,255),lineWidth,lineType ); // inner ellispe
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, 225,315, cvScalar(0,255,255),lineWidth,lineType ); // outer ellipse
+			drawArrow(frm,  cvPoint(centerX , centerY - 150), cvPoint(centerX , centerY -180 ), cvScalar(0,255,255), 9, 2, 8, 0);
 		}
 		if (imageLocat == STRAIGHT_RIGHT_IDX){
 			CvPoint  curve1[]={centerX+ 0.707*radiusIn,centerY - 0.707*radiusIn ,  centerX+ 0.707*radiusOut,centerY - 0.707*radiusOut}; 
@@ -214,9 +239,11 @@ void headsUpDisplayOverlay(IplImage * frm, int imageLocat, mat hUpLoc, int cente
 			int      nCurvePts[2]={2,2};
 			int      nCurves=2;
 			int      isCurveClosed=0;
-			cvPolyLine(frm,curveArr,nCurvePts,nCurves,isCurveClosed,cvScalar(0,0,255),lineWidth);  //draw the line
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, -45,45, cvScalar(0,0,255),lineWidth,lineType ); // inner ellispe
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, -45,45, cvScalar(0,0,255),lineWidth,lineType ); // outer ellipse
+			cvPolyLine(frm,curveArr,nCurvePts,nCurves,isCurveClosed,cvScalar(0,255,255),lineWidth);  //draw the line
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, -45,45, cvScalar(0,255,255),lineWidth,lineType ); // inner ellispe
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, -45,45, cvScalar(0,255,255),lineWidth,lineType ); // outer ellipse
+
+			drawArrow(frm,  cvPoint(centerX + 150, centerY ), cvPoint(centerX + 180, centerY ), cvScalar(0,255,255), 9, 2, 8, 0);
 		}
 		if (imageLocat == STRAIGHT_LEFT_IDX){
 			CvPoint  curve1[]={centerX- 0.707*radiusIn,centerY - 0.707*radiusIn ,  centerX- 0.707*radiusOut,centerY - 0.707*radiusOut}; 
@@ -225,9 +252,10 @@ void headsUpDisplayOverlay(IplImage * frm, int imageLocat, mat hUpLoc, int cente
 			int      nCurvePts[2]={2,2};
 			int      nCurves=2;
 			int      isCurveClosed=0;
-			cvPolyLine(frm,curveArr,nCurvePts,nCurves,isCurveClosed,cvScalar(0,0,255),lineWidth);  //draw the line
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, 135,225, cvScalar(0,0,255),lineWidth,lineType ); // inner ellispe
-			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, 135,225, cvScalar(0,0,255),lineWidth,lineType ); // outer ellipse
+			cvPolyLine(frm,curveArr,nCurvePts,nCurves,isCurveClosed,cvScalar(0,255,255),lineWidth);  //draw the line
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusIn, radiusIn ), 0, 135,225, cvScalar(0,255,255),lineWidth,lineType ); // inner ellispe
+			cvEllipse( frm, cvPoint( centerX, centerY ), cvSize( radiusOut, radiusOut ), 0, 135,225, cvScalar(0,255,255),lineWidth,lineType ); // outer ellipse
+			drawArrow(frm,  cvPoint(centerX - 150, centerY ), cvPoint(centerX - 180, centerY ), cvScalar(0,255,255), 9, 2, 8, 0);
 		}
 
 	}
@@ -237,9 +265,20 @@ void headsUpDisplayOverlay(IplImage * frm, int imageLocat, mat hUpLoc, int cente
 
 	if ( (imageLocat == DOWN_IDX ) | ( imageLocat == RIGHT_IDX ) | ( imageLocat == LEFT_IDX ) | ( imageLocat == UP_IDX ) |
 		(imageLocat == UP_LEFT_IDX) | ( imageLocat == UP_RIGHT_IDX) | ( imageLocat == DOWN_RIGHT_IDX) | (imageLocat == DOWN_LEFT_IDX) ){
-			CvFont	font;
-			cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, 1.0,1.0,0,2.0);
-			cvPutText (frm,"O",cvPoint( (int) hUpLoc(imageLocat,0), (int) hUpLoc(imageLocat,1) ), &font, cvScalar(0,255,0));
+			//CvFont	font;
+			//cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX|CV_FONT_ITALIC, 1.0,1.0,0,2.0);
+
+			CvPoint orig; orig = cvPoint(centerX, centerY);
+			CvPoint draw; draw = cvPoint((int) hUpLoc(imageLocat,0) , (int) hUpLoc(imageLocat,1) );
+			CvPoint vec; vec = cvPoint((int) hUpLoc(imageLocat,0) - centerX, (int) hUpLoc(imageLocat,1) - centerY);
+
+			drawArrow(frm,  cvPoint( ((int) hUpLoc(imageLocat,0) - 0.1*vec.x ) , ((int) hUpLoc(imageLocat,1) - 0.1*vec.y ) ),
+				cvPoint((int) hUpLoc(imageLocat,0) , (int) hUpLoc(imageLocat,1) ) , cvScalar(0,0,255), 9, 2, 8, 0);
+
+
+			//drawArrow(frm,  orig/*cvPoint((int) hUpLoc(imageLocat,0) , (int) hUpLoc(imageLocat,1) )*/,
+			//	cvPoint((int) hUpLoc(imageLocat,0) , (int) hUpLoc(imageLocat,1) ) , cvScalar(0,0,255), 9, 2, 8, 0);
+			//cvPutText (frm,"O",cvPoint( (int) hUpLoc(imageLocat,0), (int) hUpLoc(imageLocat,1) ), &font, cvScalar(0,255,0));
 
 	}
 }
@@ -266,14 +305,14 @@ mat createHeadsUpCoords(int centX, int centY, double imageRad, double mult)
 
 	headsUpLoc(UP_IDX ,0) = centX;				
 	if (centY - imageRad < 0)
-		headsUpLoc(UP_IDX,1) = 20;
+		headsUpLoc(UP_IDX,1) = 1;
 	else
 		headsUpLoc(UP_IDX,1) = centY-imageRad;
 
 
 	headsUpLoc(DOWN_IDX ,0) = centX;
 	if (centY + imageRad > 479)
-		headsUpLoc( DOWN_IDX,1) = 470;
+		headsUpLoc( DOWN_IDX,1) = 479;
 	else
 		headsUpLoc( DOWN_IDX,1) = centY+imageRad; 
 
